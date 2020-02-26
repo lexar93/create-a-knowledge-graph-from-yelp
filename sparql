@@ -1,0 +1,25 @@
+SELECT  ?Sentiment ?Restaurant ?Name ?Address ?Score ?City ?State (SAMPLE(?photo) as ?image) SAMPLE(?Text) as ?text) (SAMPLE(?Review) as ?review) (SAMPLE(?TStyle) as ?style) (SAMPLE(?TAmbiance) as   ?ambient) (SAMPLE(?TService) as ?service)
+where { ?Restaurant :hasName ?Name;
+                :Dish ?Dish;
+                :Score ?Score;
+                :hasAddress ?Address;
+                :photo ?photo;
+                :HasReview ?Review;
+                :Parking ?Parking;
+                :CreditCard ?CreditCard;
+                :Delivery ?Delivery;
+                :Kids ?Kids;
+                   :hasTopic ?o;
+                   :Sentiment ?Sentiment.
+   ?Address :hasCity ?City;
+            :hasState ?State;
+            :Lat ?Lat;
+            :Long ?Long.
+   ?Review :Text ?Text.
+   BIND (exists{?Restaurant :hasTopic :style} AS ?TStyle).              
+   BIND (exists{?Restaurant :hasTopic :ambiance} AS ?TAmbiance).
+   BIND (exists{?Restaurant :hasTopic :service} AS ?TService).
+
+   FILTER(contains(str(?Text), "sushi"))
+   } GROUP BY ?Restaurant ?Name ?Address ?Score ?City ?State ?Sentiment
+   ORDER BY DESC((?Sentiment))
